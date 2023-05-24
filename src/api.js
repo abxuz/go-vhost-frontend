@@ -116,6 +116,24 @@ const api = {
         },
     },
 
+    api: {
+        getConfig: async () => {
+            return http.get(API_BASE + '/api-config')
+        },
+        setConfig: async v => {
+            return http.post(API_BASE + '/api-config', v)
+        },
+    },
+
+    vhost: {
+        getListen: async () => {
+            return http.get(API_BASE + '/vhost-listen')
+        },
+        setListen: async v => {
+            return http.post(API_BASE + '/vhost-listen', v)
+        },
+    },
+
     reload: async () => {
         const url = API_BASE + '/reload'
         const config = {

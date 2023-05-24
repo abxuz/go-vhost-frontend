@@ -15,6 +15,7 @@ import QuicVhostEdit from '@/pages/quic/VhostEdit';
 import Cert from '@/pages/cert/Cert'
 import CertAdd from '@/pages/cert/CertAdd'
 import CertEdit from '@/pages/cert/CertEdit'
+import SystemEdit from '@/pages/system/SystemEdit'
 
 import { AppNavCtx } from '@/ctx.js'
 import api from '@/api.js'
@@ -23,10 +24,6 @@ import './App.css';
 
 
 const App = props => {
-
-    const theme = {
-        borderRadius: 2
-    }
 
     const navigate = useNavigate()
     const menuItems = [
@@ -119,6 +116,7 @@ const App = props => {
                                 <Route path='add' element={<CertAdd />} />
                                 <Route path=':name' element={<CertEdit />} />
                             </Route>
+                            <Route path='system' element={<SystemEdit />} />
                             <Route path='/' element={<Navigate to='http' />} />
                             <Route path='*' element={<Navigate to='404' replace />} />
                         </Routes>
