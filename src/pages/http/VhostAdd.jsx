@@ -13,7 +13,8 @@ const VhostAdd = props => {
     const [mapping, setMapping] = React.useState([{
         path: '/',
         target: '',
-        proxy_header: true
+        proxy_header: true,
+        redirect: false
     }])
     const navigate = useNavigate()
     const appNavCtx = React.useContext(AppNavCtx)
@@ -22,7 +23,8 @@ const VhostAdd = props => {
         setMapping(prev => [...prev, {
             path: '/',
             target: '',
-            proxy_header: true
+            proxy_header: true,
+            redirect: false
         }])
     }
     const delMapping = i => {

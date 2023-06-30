@@ -12,10 +12,13 @@ const MappingItem = props => {
         const newValue = {
             path: value.path,
             target: value.target,
-            proxy_header: value.proxy_header
+            proxy_header: value.proxy_header,
+            redirect: value.redirect
         }
         if (e.target.name === 'proxy_header') {
             newValue.proxy_header = e.target.checked
+        } if (e.target.name === 'redirect') {
+            newValue.redirect = e.target.checked
         } else {
             newValue[[e.target.name]] = e.target.value
         }
@@ -49,6 +52,14 @@ const MappingItem = props => {
                         onChange={onValueChange}
                     >
                         代理头
+                    </Checkbox>
+                    <Checkbox
+                        name="redirect"
+                        style={{ lineHeight: 2.2 }}
+                        checked={value.redirect}
+                        onChange={onValueChange}
+                    >
+                        重定向
                     </Checkbox>
                 </Col>
                 <Col span={5}>

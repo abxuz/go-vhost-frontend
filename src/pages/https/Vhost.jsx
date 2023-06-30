@@ -77,6 +77,7 @@ const Vhost = props => {
                                 <a href={m.target} target="_blank" rel="noreferrer">{m.target}</a>
                             </Tag>
                             <Tag color="green" style={{ display: m.proxy_header ? '' : 'none' }}>代理头</Tag>
+                            <Tag color="orange" style={{ display: m.redirect ? '' : 'none' }}>重定向</Tag>
                         </div>
                     ))} />
                     <Column title="证书" key="cert" render={(_, v) => (

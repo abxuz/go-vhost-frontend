@@ -18,7 +18,8 @@ const VhostEdit = props => {
     const [mapping, setMapping] = React.useState([{
         path: '/',
         target: '',
-        proxy_header: true
+        proxy_header: true,
+        redirect: false
     }])
 
     const match = useMatch('/quic/:domain')
@@ -51,7 +52,8 @@ const VhostEdit = props => {
         setMapping(prev => [...prev, {
             path: '/',
             target: '',
-            proxy_header: true
+            proxy_header: true,
+            redirect: false
         }])
     }
     const delMapping = i => {
