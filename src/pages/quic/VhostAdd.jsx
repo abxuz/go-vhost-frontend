@@ -147,7 +147,7 @@ const VhostAdd = props => {
                             onRemoveClick={() => delMapping(i)}
                             onAddClick={addMapping}
                             onChange={v => modMapping(i, v)}
-                            showRemoveBtn={i > 0}
+                            showRemoveBtn={mapping.length > 1}
                             showAddBtn={i === mapping.length - 1}
                         />
                     ))}
