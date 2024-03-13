@@ -124,7 +124,7 @@ const App = props => {
                 </div>
             </Content>
             <Footer style={{ textAlign: 'center' }}>
-                doubi.fun ©2023
+                doubi.fun ©2023-2024
             </Footer>
         </Layout>
     );
