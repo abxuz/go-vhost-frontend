@@ -94,9 +94,9 @@ const VhostAdd = props => {
                 message.error('映射目标的路径存在重复')
                 return
             }
-            const targetExp = new RegExp('^(http://|https://).+$')
+            const targetExp = new RegExp('^(http://|https://|http3://).+$')
             if (!m.target.match(targetExp)) {
-                message.error('映射目标的目标需要以http://或https://开头')
+                message.error('映射目标的目标需要以http://、https://、http3://开头')
                 return
             }
             pathMap.set(path, m)
