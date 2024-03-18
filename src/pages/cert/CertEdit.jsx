@@ -6,7 +6,7 @@ import api from "@/api";
 
 const { TextArea } = Input;
 
-const CertEdit = props => {
+const CertEdit = _ => {
 
     const [saving, setSaving] = React.useState(false)
     const [loading, setLoading] = React.useState(false)

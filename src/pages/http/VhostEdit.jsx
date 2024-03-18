@@ -6,7 +6,7 @@ import MappingItem from "@/component/MappingItem";
 import { AppNavCtx } from '@/ctx.js'
 import api from '@/api.js'
 
-const VhostEdit = props => {
+const VhostEdit = _ => {
 
     const defaultMapping = () => ({
         path: '/',

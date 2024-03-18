@@ -7,7 +7,7 @@ import './Cert.css'
 
 const { Column } = Table;
 
-const Cert = props => {
+const Cert = _ => {
 
     const [loading, setLoading] = React.useState(false)
     const [data, setData] = React.useState([])

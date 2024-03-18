@@ -6,7 +6,7 @@ import api from "@/api";
 
 const { TextArea } = Input;
 
-const CertAdd = props => {
+const CertAdd = _ => {
 
     const [loading, setLoading] = React.useState(false)
     const [name, setName] = React.useState('')

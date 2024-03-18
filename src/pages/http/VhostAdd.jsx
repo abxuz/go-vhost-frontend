@@ -5,7 +5,7 @@ import { AppNavCtx } from '@/ctx.js'
 import { Link, useNavigate } from "react-router-dom";
 import api from "@/api";
 
-const VhostAdd = props => {
+const VhostAdd = _ => {
 
     const defaultMapping = () => ({
         path: '/',

@@ -7,7 +7,7 @@ import './Vhost.css'
 
 const { Column } = Table;
 
-const Vhost = props => {
+const Vhost = _ => {
 
     const [loading, setLoading] = React.useState(false)
     const [data, setData] = React.useState([])

@@ -1,6 +1,6 @@
 import NotFoundPNG from '@/assets/pageNotFound.png'
 
-const Notfound = props => {
+const Notfound = _ => {
     const line = <p><br /></p>
     const lineStyle = {
         textAlign: 'center',

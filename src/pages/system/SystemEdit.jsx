@@ -6,7 +6,7 @@ import api from '@/api.js'
 
 const { TextArea } = Input;
 
-const SystemEdit = props => {
+const SystemEdit = _ => {
 
     const [apiLoading, setApiLoading] = React.useState(false)
     const [apiSaving, setApiSaving] = React.useState(false)

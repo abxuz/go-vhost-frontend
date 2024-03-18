@@ -7,7 +7,7 @@ import api from "@/api";
 
 const { Option } = Select;
 
-const VhostAdd = props => {
+const VhostAdd = _ => {
 
     const defaultMapping = () => ({
         path: '/',

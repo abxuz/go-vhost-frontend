@@ -22,8 +22,7 @@ import api from '@/api.js'
 
 import './App.css';
 
-
-const App = props => {
+const App = _ => {
 
     const navigate = useNavigate()
     const menuItems = [
