@@ -11,14 +11,18 @@ const Vhost = props => {
 
     const [loading, setLoading] = React.useState(false)
     const [data, setData] = React.useState([])
+    const [listen, setListen] = React.useState([])
     const appNavCtx = React.useContext(AppNavCtx)
 
     const loadData = async () => {
         setLoading(true)
+        let l = await api.vhost.getListen()
         let r = await api.http3.gets()
         setLoading(false)
         if (!r) return;
         setData(r)
+        if (!l) return;
+        l.http3 && setListen(l.http3);
     }
 
     const confirmDelete = (v) => {
@@ -34,6 +38,12 @@ const Vhost = props => {
             content: '确定要删除该映射？',
             onOk: doDelete
         })
+    }
+
+    const getTarget = (domain, l) => {
+        let port = l.substring(l.indexOf(':'))
+        if (port === ":443") port = "";
+        return 'https://' + domain + port
     }
 
     React.useEffect(() => {
@@ -52,7 +62,17 @@ const Vhost = props => {
                 <Table dataSource={data} rowKey={r => r.domain}>
                     <Column title="项目名" dataIndex="name" key="name" />
                     <Column title="映射域名" key="domain" render={(_, v) => (
-                        <a href={'https://' + v.domain} target="_blank" rel="noreferrer">{'https://' + v.domain}</a>
+                        listen.map(l => (
+                            <div key={v.domain + l}>
+                                <a
+                                    href={getTarget(v.domain, l)}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    {getTarget(v.domain, l)}
+                                </a>
+                            </div>
+                        ))
                     )} />
                     <Column title="映射目标" key="mapping" render={(_, v) => v.mapping.map(m => (
                         <div key={m.path} className="proxy-item">
