@@ -4,6 +4,8 @@ import { Button, Form, Input, message, Spin, Col, Row, Card } from "antd";
 import { AppNavCtx } from '@/ctx.js'
 import api from '@/api.js'
 
+const { TextArea } = Input;
+
 const SystemEdit = props => {
 
     const [apiLoading, setApiLoading] = React.useState(false)
@@ -16,7 +18,7 @@ const SystemEdit = props => {
         let data = await api.api.getConfig()
         setApiLoading(false)
         if (!data) return;
-        data.listen && setApiListen(data.listen);
+        data.listen && setApiListen(data.listen.join("\n"));
         if (data.auth) {
             data.auth.username && setUsername(data.auth.username);
             data.auth.password && setPassword(data.auth.password);
@@ -25,7 +27,7 @@ const SystemEdit = props => {
 
     const saveApiConfig = async () => {
         let v = {
-            listen: apiListen,
+            listen: [],
             auth: null,
         }
         if (username !== '' || password !== '') {
@@ -34,6 +36,14 @@ const SystemEdit = props => {
                 password: password,
             }
         }
+
+        apiListen.split("\n").forEach(l => {
+            l = l.trim()
+            if (l !== '') {
+                v.listen.push(l)
+            }
+        })
+
         setApiSaving(true)
         let r = await api.api.setConfig(v)
         setApiSaving(false)
@@ -46,24 +56,47 @@ const SystemEdit = props => {
     const [vhostSaving, setVhostSaving] = React.useState(false)
     const [httpListen, setHttpListen] = React.useState('')
     const [httpsListen, setHttpsListen] = React.useState('')
-    const [quicListen, setQuicListen] = React.useState('')
+    const [http3Listen, setHttp3Listen] = React.useState('')
     const loadVhostListen = async () => {
         setVhostLoading(true)
         let data = await api.vhost.getListen();
         setVhostLoading(false)
         if (!data) return
-        data.http && setHttpListen(data.http);
-        data.https && setHttpsListen(data.https);
-        data.quic && setQuicListen(data.quic);
+        data.http  && setHttpListen(data.http.join("\n"));
+        data.https && setHttpsListen(data.https.join("\n"));
+        data.http3 && setHttp3Listen(data.http3.join("\n"));
     }
 
     const saveVhostListen = async () => {
-        setVhostSaving(true)
-        let r = await api.vhost.setListen({
-            http: httpListen,
-            https: httpsListen,
-            quic: quicListen,
+        const v = {
+            http: [],
+            https: [],
+            http3: []
+        }
+
+        httpListen.split("\n").forEach(l => {
+            l = l.trim()
+            if (l !== '') {
+                v.http.push(l)
+            }
         })
+
+        httpsListen.split("\n").forEach(l => {
+            l = l.trim()
+            if (l !== '') {
+                v.https.push(l)
+            }
+        })
+
+        http3Listen.split("\n").forEach(l => {
+            l = l.trim()
+            if (l !== '') {
+                v.http3.push(l)
+            }
+        })
+
+        setVhostSaving(true)
+        let r = await api.vhost.setListen(v)
         setVhostSaving(false)
         if (!r) return
         message.success('映射配置保存成功')
@@ -85,7 +118,12 @@ const SystemEdit = props => {
                         <Spin spinning={apiLoading}>
                             <Form labelCol={{ span: 4 }}>
                                 <Form.Item label="监听地址">
-                                    <Input value={apiListen} onChange={e => setApiListen(e.target.value)} placeholder="留空关闭" />
+                                    <TextArea
+                                        value={apiListen}
+                                        autoSize
+                                        onChange={e => setApiListen(e.target.value)}
+                                        placeholder="一行一个、留空关闭"
+                                    />
                                 </Form.Item>
                                 <Form.Item label="用户名">
                                     <Input value={username} onChange={e => setUsername(e.target.value)} placeholder="" />
@@ -105,13 +143,28 @@ const SystemEdit = props => {
                         <Spin spinning={vhostLoading}>
                             <Form labelCol={{ span: 8 }}>
                                 <Form.Item label="HTTP监听地址">
-                                    <Input value={httpListen} onChange={e => setHttpListen(e.target.value)} placeholder="留空关闭" />
+                                    <TextArea
+                                        value={httpListen}
+                                        autoSize
+                                        onChange={e => setHttpListen(e.target.value)}
+                                        placeholder="一行一个、留空关闭"
+                                    />
                                 </Form.Item>
                                 <Form.Item label="HTTPS监听地址">
-                                    <Input value={httpsListen} onChange={e => setHttpsListen(e.target.value)} placeholder="留空关闭" />
+                                    <TextArea
+                                        value={httpsListen}
+                                        autoSize
+                                        onChange={e => setHttpsListen(e.target.value)}
+                                        placeholder="一行一个、留空关闭"
+                                    />
                                 </Form.Item>
-                                <Form.Item label="QUIC监听地址">
-                                    <Input value={quicListen} onChange={e => setQuicListen(e.target.value)} placeholder="留空关闭" />
+                                <Form.Item label="HTTP3监听地址">
+                                    <TextArea
+                                        value={http3Listen}
+                                        autoSize
+                                        onChange={e => setHttp3Listen(e.target.value)}
+                                        placeholder="一行一个、留空关闭"
+                                    />
                                 </Form.Item>
                                 <Form.Item style={{ float: 'right' }}>
                                     <Button type="primary" loading={vhostSaving} onClick={() => { saveVhostListen() }}>保存</Button>

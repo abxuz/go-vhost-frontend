@@ -9,15 +9,18 @@ const { Option } = Select;
 
 const VhostAdd = props => {
 
+    const defaultMapping = () => ({
+        path: '/',
+        target: '',
+        add_header: [],
+        proxy_header: true,
+        redirect: false
+    })
+
     const [loading, setLoading] = React.useState(false)
     const [name, setName] = React.useState('')
     const [domain, setDomain] = React.useState('')
-    const [mapping, setMapping] = React.useState([{
-        path: '/',
-        target: '',
-        proxy_header: true,
-        redirect: false
-    }])
+    const [mapping, setMapping] = React.useState([defaultMapping()])
     const [cert, setCert] = React.useState('')
     const navigate = useNavigate()
     const appNavCtx = React.useContext(AppNavCtx)
@@ -32,13 +35,12 @@ const VhostAdd = props => {
         setCertList(r)
     }
 
-    const addMapping = () => {
-        setMapping(prev => [...prev, {
-            path: '/',
-            target: '',
-            proxy_header: true,
-            redirect: false
-        }])
+    const addMapping = i => {
+        setMapping(prev => [
+            ...prev.slice(0, i + 1),
+            defaultMapping(),
+            ...prev.slice(i + 1)
+        ])
     }
     const delMapping = i => {
         setMapping(prev => {
@@ -57,7 +59,7 @@ const VhostAdd = props => {
 
     const addVhost = async v => {
         setLoading(true)
-        let r = await api.quic.add(v)
+        let r = await api.http3.add(v)
         setLoading(false)
         if (!r) return
         message.success('添加成功')
@@ -111,7 +113,7 @@ const VhostAdd = props => {
     }
 
     React.useEffect(() => {
-        appNavCtx.setBreadcrumb(['QUIC映射', '添加映射'])
+        appNavCtx.setBreadcrumb(['HTTP3映射', '添加映射'])
         loadCert()
     }, [])  // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -145,10 +147,9 @@ const VhostAdd = props => {
                             key={i}
                             value={v}
                             onRemoveClick={() => delMapping(i)}
-                            onAddClick={addMapping}
+                            onAddClick={() => addMapping(i)}
                             onChange={v => modMapping(i, v)}
                             showRemoveBtn={mapping.length > 1}
-                            showAddBtn={i === mapping.length - 1}
                         />
                     ))}
                 </Form.Item>

@@ -36,9 +36,6 @@ http.interceptors.response.use(responseDataHandler, responseErrorHandler);
 const API_BASE = '/api/v1'
 const api = {
     http: {
-        getConfig: async () => {
-            return http.get(API_BASE + '/http-config')
-        },
         gets: async () => {
             return http.get(API_BASE + '/http-vhost')
         },
@@ -57,9 +54,6 @@ const api = {
     },
 
     https: {
-        getConfig: async () => {
-            return http.get(API_BASE + '/https-config')
-        },
         gets: async () => {
             return http.get(API_BASE + '/https-vhost')
         },
@@ -77,24 +71,21 @@ const api = {
         },
     },
 
-    quic: {
-        getConfig: async () => {
-            return http.get(API_BASE + '/quic-config')
-        },
+    http3: {
         gets: async () => {
-            return http.get(API_BASE + '/quic-vhost')
+            return http.get(API_BASE + '/http3-vhost')
         },
         get: async domain => {
-            return http.get(API_BASE + '/quic-vhost/' + encodeURIComponent(domain))
+            return http.get(API_BASE + '/http3-vhost/' + encodeURIComponent(domain))
         },
         add: async v => {
-            return http.post(API_BASE + '/quic-vhost', v)
+            return http.post(API_BASE + '/http3-vhost', v)
         },
         del: async domain => {
-            return http.delete(API_BASE + '/quic-vhost/' + encodeURIComponent(domain))
+            return http.delete(API_BASE + '/http3-vhost/' + encodeURIComponent(domain))
         },
         mod: async v => {
-            return http.patch(API_BASE + '/quic-vhost', v)
+            return http.patch(API_BASE + '/http3-vhost', v)
         },
     },
 
@@ -152,6 +143,10 @@ const api = {
         client.interceptors.response.use(responseDataHandler, errHandler);
         return client.get(url)
     },
+
+    save: async() => {
+        return http.get(API_BASE + '/save')
+    }
 }
 
 export default api

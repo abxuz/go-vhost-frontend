@@ -56,7 +56,10 @@ const CertAdd = props => {
                 <Form.Item label="证书内容" required>
                     <TextArea
                         value={content}
-                        rows={8}
+                        autoSize={{
+                            minRows: 8,
+                            maxRows: 16,
+                        }}
                         onChange={e => setContent(e.target.value)}
                     />
                 </Form.Item>

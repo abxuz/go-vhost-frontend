@@ -10,22 +10,20 @@ const { Column } = Table;
 const Vhost = props => {
 
     const [loading, setLoading] = React.useState(false)
-    const [data, setData] = React.useState({ listen: '', vhost: [] })
+    const [data, setData] = React.useState([])
     const appNavCtx = React.useContext(AppNavCtx)
 
     const loadData = async () => {
         setLoading(true)
-        let r = await api.quic.getConfig()
+        let r = await api.http3.gets()
         setLoading(false)
         if (!r) return;
-        if (!r.listen) r.listen = "";
-        if (!r.vhost) r.vhost = [];
         setData(r)
     }
 
     const confirmDelete = (v) => {
         const doDelete = async () => {
-            let r = await api.quic.del(v.domain)
+            let r = await api.http3.del(v.domain)
             if (!r) return
             message.success('删除成功')
             await loadData()
@@ -38,21 +36,8 @@ const Vhost = props => {
         })
     }
 
-    const getTarget = (v) => {
-        let port = ''
-        if (data && data.listen) {
-            let pos = data.listen.lastIndexOf(':');
-            if (pos > 0) {
-                port = data.listen.substring(pos)
-            }
-            if (port === ':443') port = ''
-        }
-        return 'https://' + v.domain + port
-    }
-
-
     React.useEffect(() => {
-        appNavCtx.setBreadcrumb(['QUIC映射'])
+        appNavCtx.setBreadcrumb(['HTTP3映射'])
         loadData()
     }, [])  // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -64,10 +49,10 @@ const Vhost = props => {
                 </Link>
             </div>
             <Spin spinning={loading}>
-                <Table dataSource={data.vhost} rowKey={r => r.domain}>
+                <Table dataSource={data} rowKey={r => r.domain}>
                     <Column title="项目名" dataIndex="name" key="name" />
                     <Column title="映射域名" key="domain" render={(_, v) => (
-                        <a href={getTarget(v)} target="_blank" rel="noreferrer">{getTarget(v)}</a>
+                        <a href={'https://' + v.domain} target="_blank" rel="noreferrer">{'https://' + v.domain}</a>
                     )} />
                     <Column title="映射目标" key="mapping" render={(_, v) => v.mapping.map(m => (
                         <div key={m.path} className="proxy-item">
@@ -85,7 +70,7 @@ const Vhost = props => {
                     )} />
                     <Column title="操作" key="op" width="150px" render={(_, v) => (
                         <div className="table-op">
-                            <Link to={'/quic/' + encodeURIComponent(v.domain)}>
+                            <Link to={'/http3/' + encodeURIComponent(v.domain)}>
                                 <Button type="primary" size="small">编辑</Button>
                             </Link>
                             <Button danger size="small"

@@ -9,9 +9,9 @@ import HttpVhostEdit from '@/pages/http/VhostEdit';
 import HttpsVhost from '@/pages/https/Vhost';
 import HttpsVhostAdd from '@/pages/https/VhostAdd';
 import HttpsVhostEdit from '@/pages/https/VhostEdit';
-import QuicVhost from '@/pages/quic/Vhost';
-import QuicVhostAdd from '@/pages/quic/VhostAdd';
-import QuicVhostEdit from '@/pages/quic/VhostEdit';
+import Http3Vhost from '@/pages/http3/Vhost';
+import Http3VhostAdd from '@/pages/http3/VhostAdd';
+import Http3VhostEdit from '@/pages/http3/VhostEdit';
 import Cert from '@/pages/cert/Cert'
 import CertAdd from '@/pages/cert/CertAdd'
 import CertEdit from '@/pages/cert/CertEdit'
@@ -29,7 +29,7 @@ const App = props => {
     const menuItems = [
         { key: 'http', label: 'HTTP映射' },
         { key: 'https', label: 'HTTPS映射' },
-        { key: 'quic', label: 'QUIC映射' },
+        { key: 'http3', label: 'HTTP3映射' },
         { key: 'cert', label: '证书管理' },
         { key: 'system', label: '系统设置' },
     ]
@@ -45,8 +45,8 @@ const App = props => {
             case 'https':
                 navigate('https')
                 break
-            case 'quic':
-                navigate('quic')
+            case 'http3':
+                navigate('http3')
                 break
             case 'cert':
                 navigate('cert')
@@ -56,6 +56,19 @@ const App = props => {
                 break
             default:
         }
+    }
+
+    const confirmSave = () => {
+        const save = async () => {
+            let r = await api.save()
+            if (!r) return
+            message.success('保存成功')
+        }
+        Modal.confirm({
+            title: '危险操作',
+            content: '确定要保存配置？',
+            onOk: save
+        })
     }
 
     const confirmReload = () => {
@@ -84,10 +97,15 @@ const App = props => {
                     onClick={menuItemClick} />
                 <div id='nav-op'>
                     <Button
+                        type='primary'
+                        onClick={confirmSave}>
+                        保存
+                    </Button>
+                    <Button
                         danger
                         type='primary'
                         onClick={confirmReload}>
-                        重载配置
+                        重载
                     </Button>
                 </div>
             </Header>
@@ -106,10 +124,10 @@ const App = props => {
                                 <Route path='add' element={<HttpsVhostAdd />} />
                                 <Route path=':domain' element={<HttpsVhostEdit />} />
                             </Route>
-                            <Route path='quic' element={<Outlet />}>
-                                <Route path='' element={<QuicVhost />} />
-                                <Route path='add' element={<QuicVhostAdd />} />
-                                <Route path=':domain' element={<QuicVhostEdit />} />
+                            <Route path='http3' element={<Outlet />}>
+                                <Route path='' element={<Http3Vhost />} />
+                                <Route path='add' element={<Http3VhostAdd />} />
+                                <Route path=':domain' element={<Http3VhostEdit />} />
                             </Route>
                             <Route path='cert' element={<Outlet />}>
                                 <Route path='' element={<Cert />} />

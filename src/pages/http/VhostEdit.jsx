@@ -8,16 +8,19 @@ import api from '@/api.js'
 
 const VhostEdit = props => {
 
+    const defaultMapping = () => ({
+        path: '/',
+        target: '',
+        add_header: [],
+        proxy_header: true,
+        redirect: false
+    })
+
     const [loading, setLoading] = React.useState(false)
     const [saving, setSaving] = React.useState(false)
     const [name, setName] = React.useState('')
     const [domain, setDomain] = React.useState('')
-    const [mapping, setMapping] = React.useState([{
-        path: '/',
-        target: '',
-        proxy_header: true,
-        redirect: false
-    }])
+    const [mapping, setMapping] = React.useState([defaultMapping()])
 
     const match = useMatch('/http/:domain')
     const navigate = useNavigate()
@@ -34,13 +37,12 @@ const VhostEdit = props => {
         setMapping(r.mapping)
     }
 
-    const addMapping = () => {
-        setMapping(prev => [...prev, {
-            path: '/',
-            target: '',
-            proxy_header: true,
-            redirect: false
-        }])
+    const addMapping = i => {
+        setMapping(prev => [
+            ...prev.slice(0, i + 1),
+            defaultMapping(),
+            ...prev.slice(i + 1)
+        ])
     }
     const delMapping = i => {
         setMapping(prev => {
@@ -132,10 +134,9 @@ const VhostEdit = props => {
                                 key={i}
                                 value={v}
                                 onRemoveClick={() => delMapping(i)}
-                                onAddClick={addMapping}
+                                onAddClick={() => addMapping(i)}
                                 onChange={v => modMapping(i, v)}
-                                showRemoveBtn={i > 0}
-                                showAddBtn={i === mapping.length - 1}
+                                showRemoveBtn={mapping.length > 1}
                             />
                         ))}
                     </Form.Item>

@@ -7,25 +7,27 @@ import api from "@/api";
 
 const VhostAdd = props => {
 
+    const defaultMapping = () => ({
+        path: '/',
+        target: '',
+        add_header: [],
+        proxy_header: true,
+        redirect: false
+    })
+
     const [loading, setLoading] = React.useState(false)
     const [name, setName] = React.useState('')
     const [domain, setDomain] = React.useState('')
-    const [mapping, setMapping] = React.useState([{
-        path: '/',
-        target: '',
-        proxy_header: true,
-        redirect: false
-    }])
+    const [mapping, setMapping] = React.useState([defaultMapping()])
     const navigate = useNavigate()
     const appNavCtx = React.useContext(AppNavCtx)
 
-    const addMapping = () => {
-        setMapping(prev => [...prev, {
-            path: '/',
-            target: '',
-            proxy_header: true,
-            redirect: false
-        }])
+    const addMapping = i => {
+        setMapping(prev => [
+            ...prev.slice(0, i + 1),
+            defaultMapping(),
+            ...prev.slice(i + 1)
+        ])
     }
     const delMapping = i => {
         setMapping(prev => {
@@ -114,10 +116,9 @@ const VhostAdd = props => {
                             key={i}
                             value={v}
                             onRemoveClick={() => delMapping(i)}
-                            onAddClick={addMapping}
+                            onAddClick={() => addMapping(i)}
                             onChange={v => modMapping(i, v)}
                             showRemoveBtn={mapping.length > 1}
-                            showAddBtn={i === mapping.length - 1}
                         />
                     ))}
                 </Form.Item>

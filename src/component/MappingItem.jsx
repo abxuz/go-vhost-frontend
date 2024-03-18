@@ -5,7 +5,7 @@ import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import './MappingItem.css'
 
 const MappingItem = props => {
-    const { value, onAddClick, onRemoveClick, onChange, showAddBtn, showRemoveBtn } = props
+    const { value, onAddClick, onRemoveClick, onChange, showRemoveBtn } = props
 
     const onValueChange = e => {
         if (!onChange) return
@@ -64,7 +64,6 @@ const MappingItem = props => {
                         shape="circle"
                         size="small"
                         icon={<PlusOutlined />}
-                        style={{ display: showAddBtn ? '' : 'none' }}
                         onClick={() => { onAddClick && onAddClick() }}
                     />
                     <Button

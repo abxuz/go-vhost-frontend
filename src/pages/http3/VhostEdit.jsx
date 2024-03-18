@@ -10,19 +10,22 @@ const { Option } = Select;
 
 const VhostEdit = props => {
 
+    const defaultMapping = () => ({
+        path: '/',
+        target: '',
+        add_header: [],
+        proxy_header: true,
+        redirect: false
+    })
+
     const [loading, setLoading] = React.useState(false)
     const [saving, setSaving] = React.useState(false)
     const [name, setName] = React.useState('')
     const [domain, setDomain] = React.useState('')
     const [cert, setCert] = React.useState('')
-    const [mapping, setMapping] = React.useState([{
-        path: '/',
-        target: '',
-        proxy_header: true,
-        redirect: false
-    }])
+    const [mapping, setMapping] = React.useState([defaultMapping()])
 
-    const match = useMatch('/quic/:domain')
+    const match = useMatch('/http3/:domain')
     const navigate = useNavigate()
     const appNavCtx = React.useContext(AppNavCtx)
 
@@ -38,7 +41,7 @@ const VhostEdit = props => {
 
     const loadData = async () => {
         setLoading(true)
-        let r = await api.quic.get(match.params.domain)
+        let r = await api.http3.get(match.params.domain)
         setLoading(false)
         if (!r) return
 
@@ -48,13 +51,12 @@ const VhostEdit = props => {
         setCert(r.cert)
     }
 
-    const addMapping = () => {
-        setMapping(prev => [...prev, {
-            path: '/',
-            target: '',
-            proxy_header: true,
-            redirect: false
-        }])
+    const addMapping = i => {
+        setMapping(prev => [
+            ...prev.slice(0, i + 1),
+            defaultMapping(),
+            ...prev.slice(i + 1)
+        ])
     }
     const delMapping = i => {
         setMapping(prev => {
@@ -73,7 +75,7 @@ const VhostEdit = props => {
 
     const saveVhost = async (v) => {
         setSaving(true)
-        let r = await api.quic.mod(v)
+        let r = await api.http3.mod(v)
         setSaving(false)
         if (!r) return
         message.success('保存成功')
@@ -128,7 +130,7 @@ const VhostEdit = props => {
     }
 
     React.useEffect(() => {
-        appNavCtx.setBreadcrumb(['QUIC映射', '编辑映射'])
+        appNavCtx.setBreadcrumb(['HTTP3映射', '编辑映射'])
         loadCert()
         loadData()
     }, [])  // eslint-disable-line react-hooks/exhaustive-deps
@@ -164,10 +166,9 @@ const VhostEdit = props => {
                                 key={i}
                                 value={v}
                                 onRemoveClick={() => delMapping(i)}
-                                onAddClick={addMapping}
+                                onAddClick={() => addMapping(i)}
                                 onChange={v => modMapping(i, v)}
-                                showRemoveBtn={i > 0}
-                                showAddBtn={i === mapping.length - 1}
+                                showRemoveBtn={mapping.length > 1}
                             />
                         ))}
                     </Form.Item>
