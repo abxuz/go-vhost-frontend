@@ -59,6 +59,16 @@ const VhostEdit = _ => {
         })
     }
 
+    const moveMapping = (i1, i2) => {
+        setMapping(prev => {
+            let m = [...prev]
+            let x = m[i1]
+            m[i1] = m[i2]
+            m[i2] = x
+            return m
+        })
+    }
+
     const saveVhost = async (v) => {
         setSaving(true)
         let r = await api.http.mod(v)
@@ -135,8 +145,12 @@ const VhostEdit = _ => {
                                 value={v}
                                 onRemoveClick={() => delMapping(i)}
                                 onAddClick={() => addMapping(i)}
+                                onUpClick={() => moveMapping(i, i - 1)}
+                                onDownClick={() => moveMapping(i, i + 1)}
                                 onChange={v => modMapping(i, v)}
                                 showRemoveBtn={mapping.length > 1}
+                                showUpBtn={i > 0}
+                                showDownBtn={i < mapping.length - 1}
                             />
                         ))}
                     </Form.Item>

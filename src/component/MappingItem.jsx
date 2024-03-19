@@ -1,13 +1,13 @@
 import React from "react";
 import { Button, Checkbox, Col, Input, Row, Modal, message } from "antd"
-import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
+import { PlusOutlined, MinusOutlined, UpOutlined, DownOutlined } from '@ant-design/icons'
 
 import './MappingItem.css'
 
 const { TextArea } = Input;
 
 const MappingItem = props => {
-    const { value, onAddClick, onRemoveClick, onChange, showRemoveBtn } = props
+    const { value, onAddClick, onRemoveClick, onUpClick, onDownClick, onChange, showUpBtn, showDownBtn, showRemoveBtn } = props
 
     const [showModal, setShowModal] = React.useState(false)
     const [addHeader, setAddHeader] = React.useState('')
@@ -72,7 +72,7 @@ const MappingItem = props => {
                         onChange={onValueChange}
                     />
                 </Col>
-                <Col span={5} style={{ lineHeight: 2.2 }}>
+                <Col span={6} style={{ lineHeight: 2.2 }}>
                     <Button
                         style={{ marginRight: '10px' }}
                         onClick={showAddHeader}
@@ -94,7 +94,23 @@ const MappingItem = props => {
                         重定向
                     </Checkbox>
                 </Col>
-                <Col span={5}>
+                <Col span={4}>
+                    <Button
+                        className="proxy-up-btn"
+                        shape="circle"
+                        size="small"
+                        icon={<UpOutlined />}
+                        style={{ display: showUpBtn ? '' : 'none' }}
+                        onClick={() => { onUpClick && onUpClick() }}
+                    />
+                    <Button
+                        className="proxy-down-btn"
+                        shape="circle"
+                        size="small"
+                        icon={<DownOutlined />}
+                        style={{ display: showDownBtn ? '' : 'none' }}
+                        onClick={() => { onDownClick && onDownClick() }}
+                    />
                     <Button
                         className="proxy-add-btn"
                         type="primary"

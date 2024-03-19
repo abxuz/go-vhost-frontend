@@ -57,6 +57,16 @@ const VhostAdd = _ => {
         })
     }
 
+    const moveMapping = (i1, i2) => {
+        setMapping(prev => {
+            let m = [...prev]
+            let x = m[i1]
+            m[i1] = m[i2]
+            m[i2] = x
+            return m
+        })
+    }
+
     const addVhost = async v => {
         setLoading(true)
         let r = await api.https.add(v)
@@ -148,8 +158,12 @@ const VhostAdd = _ => {
                             value={v}
                             onRemoveClick={() => delMapping(i)}
                             onAddClick={() => addMapping(i)}
+                            onUpClick={() => moveMapping(i, i - 1)}
+                            onDownClick={() => moveMapping(i, i + 1)}
                             onChange={v => modMapping(i, v)}
                             showRemoveBtn={mapping.length > 1}
+                            showUpBtn={i > 0}
+                            showDownBtn={i < mapping.length - 1}
                         />
                     ))}
                 </Form.Item>
