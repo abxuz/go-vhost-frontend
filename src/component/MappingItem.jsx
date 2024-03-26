@@ -35,6 +35,7 @@ const MappingItem = props => {
         const lines = addHeader.split("\n")
         for (let line of lines) {
             line = line.trim()
+            if (line === '') continue;
             const items = line.split(":")
             if (items.length < 2) {
                 message.error('格式有误');
