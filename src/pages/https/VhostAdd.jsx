@@ -13,6 +13,7 @@ const VhostAdd = _ => {
         path: '/',
         target: '',
         add_header: [],
+        basci_auth: [],
         proxy_header: true,
         redirect: false
     })

@@ -12,6 +12,7 @@ const VhostEdit = _ => {
         path: '/',
         target: '',
         add_header: [],
+        basic_auth: [],
         proxy_header: true,
         redirect: false
     })

@@ -6,11 +6,23 @@ import './MappingItem.css'
 
 const { TextArea } = Input;
 
-const MappingItem = props => {
-    const { value, onAddClick, onRemoveClick, onUpClick, onDownClick, onChange, showUpBtn, showDownBtn, showRemoveBtn } = props
+const MappingItem = ({
+    value,
+    onAddClick,
+    onRemoveClick,
+    onUpClick,
+    onDownClick,
+    onChange,
+    showUpBtn,
+    showDownBtn,
+    showRemoveBtn
+}) => {
 
-    const [showModal, setShowModal] = React.useState(false)
+    const [showAddHeader, setShowAddHeader] = React.useState(false)
     const [addHeader, setAddHeader] = React.useState('')
+
+    const [showBasicAuth, setShowBasicAuth] = React.useState(false)
+    const [basicAuth, setBasicAuth] = React.useState('')
 
     const onValueChange = e => {
         if (!onChange) return
@@ -25,12 +37,7 @@ const MappingItem = props => {
         onChange(newValue)
     }
 
-    const showAddHeader = () => {
-        setAddHeader(value.add_header.join("\n"))
-        setShowModal(true)
-    }
-
-    const handleOk = () => {
+    const addHeaderOk = () => {
         const headers = [];
         const lines = addHeader.split("\n")
         for (let line of lines) {
@@ -44,14 +51,37 @@ const MappingItem = props => {
             headers.push(line)
         }
         if (!onChange) {
-            setShowModal(false);
+            setShowAddHeader(false);
             return
         }
 
         let newValue = { ...value }
         newValue.add_header = headers
         onChange(newValue)
-        setShowModal(false);
+        setShowAddHeader(false);
+    }
+
+
+    const basicAuthOk = () => {
+        const auths = [];
+        const lines = basicAuth.split("\n")
+        for (let line of lines) {
+            const items = line.split(":")
+            if (items.length < 2) {
+                message.error('格式有误');
+                return
+            }
+            auths.push(line)
+        }
+        if (!onChange) {
+            setShowBasicAuth(false);
+            return
+        }
+
+        let newValue = { ...value }
+        newValue.basic_auth = auths
+        onChange(newValue)
+        setShowBasicAuth(false);
     }
 
     return (
@@ -76,9 +106,21 @@ const MappingItem = props => {
                 <Col span={6} style={{ lineHeight: 2.2 }}>
                     <Button
                         style={{ marginRight: '10px' }}
-                        onClick={showAddHeader}
+                        onClick={() => {
+                            setAddHeader(value.add_header.join("\n"));
+                            setShowAddHeader(true);
+                        }}
                     >
                         添加头部
+                    </Button>
+                    <Button
+                        style={{ marginRight: '10px' }}
+                        onClick={() => {
+                            setBasicAuth(value.basic_auth.join("\n"));
+                            setShowBasicAuth(true);
+                        }}
+                    >
+                        BasicAuth
                     </Button>
                     <Checkbox
                         name="proxy_header"
@@ -134,14 +176,26 @@ const MappingItem = props => {
             </Row>
             <Modal
                 title="添加头部"
-                open={showModal}
-                onOk={handleOk}
-                onCancel={() => setShowModal(false)}>
+                open={showAddHeader}
+                onOk={addHeaderOk}
+                onCancel={() => setShowAddHeader(false)}>
                 <TextArea
                     value={addHeader}
                     autoSize
                     placeholder="一行一个 Key:Value"
-                    onChange={e => setAddHeader(e.target.value)}
+                    onChange={e => { setAddHeader(e.target.value) }}
+                />
+            </Modal>
+            <Modal
+                title="BasicAuth"
+                open={showBasicAuth}
+                onOk={basicAuthOk}
+                onCancel={() => setShowBasicAuth(false)}>
+                <TextArea
+                    value={basicAuth}
+                    autoSize
+                    placeholder="一行一个，不要有无意义的空格 username:password"
+                    onChange={e => setBasicAuth(e.target.value)}
                 />
             </Modal>
         </Input.Group>
